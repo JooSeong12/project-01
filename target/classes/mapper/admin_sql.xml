@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE  mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.js12.mapper.AdminMapper">
+	<insert id="adminInsert" parameterType="adminDto">
+		INSERT INTO admin(a_id, a_pw, a_name, a_phone, a_approval)
+		VALUES(#{adminDto.a_id}, #{adminDto.a_pw}, #{adminDto.a_name}, #{adminDto.a_phone}, #{adminDto.a_approval})
+	</insert>
+	<select id="loginConfirm" parameterType="adminDto" resultType="adminDto">
+		SELECT a_id, a_pw, a_name, a_phone, a_approval FROM admin
+		WHERE a_id = #{adminDto.a_id} AND a_approval > 0
+	</select>
+	<select id="adminList" parameterType="adminDto" resultType="adminDto">
+		SELECT a_id, a_pw, a_name, a_phone, a_approval FROM admin
+	</select>
+	<update id="updateAdminAccount" parameterType="String">
+		UPDATE admin SET a_approval = 1
+		WHERE a_id = #{id}
+	</update>
+	<update id="modifyAccountConfirm" parameterType="adminDto">
+		UPDATE admin SET a_name = #{adminDto.a_name}, a_phone= #{adminDto.a_phone}
+		WHERE a_id = #{adminDto.a_id}
+	</update>
+	<select id="searchId" resultType="adminDto">
+		SELECT a_id, a_name, a_phone FROM admin
+		<where>
+			<if test="'Account'.equals(category)">
+				 a_id LIKE CONCAT('%', #{keyword}, '%')
+			</if>
+			<if test="'Name'.equals(category)">
+				 a_name LIKE CONCAT('%', #{keyword}, '%')
+			</if>
+			<if test="'Phone'.equals(category)">
+				 a_phone LIKE CONCAT('%', #{keyword}, '%')
+			</if>
+		</where>
+	</select>
+</mapper>
